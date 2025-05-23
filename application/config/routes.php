@@ -49,29 +49,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'users';
+$route['default_controller'] = 'admin';
 $route['translate_uri_dashes'] = FALSE;
 
-// List all users (GET)
-$route['users'] = 'users/index';
+// List all admins (GET)
+$route['admin'] = 'admin/index';
 
-// Create new user (POST)
-$route['users/create'] = 'users/create';
+// Create new admin (POST)
+$route['admin/create'] = 'admin/create';
 
-// Get user by ID (GET)
-$route['users/(:num)'] = 'users/get_user/$1';
+// Get admin by ID (GET)
+$route['admin/(:num)'] = 'admins/get_admin/$1';
 
-// Update user by ID (POST)
-$route['users/update/(:num)'] = 'users/update/$1';
+// Update admin by ID (POST)
+$route['admin/update/(:num)'] = 'admin/update/$1';
 
-// Delete user by ID
-$route['users/delete/(:num)'] = 'users/delete/$1';
+// Delete admin by ID
+$route['admin/delete/(:num)'] = 'admin/delete/$1';
 
 // login by email & Password
-$route['users/login'] = 'users/login';
+$route['admin/login'] = 'admin/login';
 
 // logout
-// $route['users/logout'] = 'users/logout';
+// $route['admin/logout'] = 'admin/logout';
 
 // 404
-$route['404_override'] = 'users/not_found404';
+$route['404_override'] = 'admin/not_found404';
