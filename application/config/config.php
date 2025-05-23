@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://192.168.1.13/Panth/inventory-management-api/';
+$config['base_url'] = 'your_url';
 
 /*
 |--------------------------------------------------------------------------
@@ -310,7 +310,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/userguide3/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '7dc553d839ef12c399989717a0cb5c10b3e454cdb6dd94438b9df2e27e5f75e3';
+$config['encryption_key'] = '';
 
 /*
 |--------------------------------------------------------------------------
