@@ -297,17 +297,35 @@ class Admin extends CI_Controller {
 //Products Build
 
     //Get Products
-    public function products() {
+    public function products($id = null) {
         if ($this->input->method() !== 'get') {
             echo json_encode(['status' => 0, 'message' => 'Invalid HTTP method. Use GET method.']);
             return;
+        }
+        $this->load->helper('url');
+        $base_url = base_url();
+
+        if($id){
+            $result =  $this->Products_model->get_product_by_id($id);
+            if(!empty($result)){
+                    $updated_images=[];
+                    $decoded_images = json_decode($result->image);
+                    foreach($decoded_images as $image){
+                        $updated_images[] = $base_url . 'uploads/' . $image;
+                    }
+                    $result->image = $updated_images;
+                    echo json_encode(["status"=>1,"products"=>$result]);
+                    return;
+                }else {
+                    echo json_encode(["status"=> 0, "message"=> "No Product Found with id " . $id]);
+                    return;
+            }
         }
         // if(empty($this->session->loggedInAdmin)){
         //     echo json_encode(['status' => 0, 'message' => 'Not Logged In!']);
         //     return;
         // }
-        $this->load->helper('url');
-        $base_url = base_url();
+       
         $query = $this->db->get('products');
         $result = $query->result();
 
@@ -347,7 +365,7 @@ class Admin extends CI_Controller {
         $this->load->helper('url');
         $config['upload_path'] = FCPATH . 'uploads/';
         $config['allowed_types'] = 'jpg|jpeg|png|gif';
-        $config['max_size']      = 2048;
+        // $config['max_size']      = 2048;
         $config['encrypt_name']  = TRUE;
 
         $this->upload->initialize($config);
@@ -429,20 +447,21 @@ class Admin extends CI_Controller {
         //     echo json_encode(['status' => 0, 'message' => 'Required name, category, description, amount and stock.']);
         //     return;
         // }
-        
+
         $this->load->helper('url');
         $config['upload_path'] = FCPATH . 'uploads/';
         $config['allowed_types'] = 'jpg|jpeg|png|gif';
-        $config['max_size']      = 2048;
+        // $config['max_size']      = 2048;
         $config['encrypt_name']  = TRUE;
 
         $this->upload->initialize($config);
 
         $image_names = [];
+        $image_changed = false;
 
         if (!empty($_FILES['image']['name'][0])) {
             $count = count($_FILES['image']['name']);
-
+            $image_changed = true;
             for ($i = 0; $i < $count; $i++) {
                 $_FILES['single_image']['name']     = $_FILES['image']['name'][$i];
                 $_FILES['single_image']['type']     = $_FILES['image']['type'][$i];
@@ -459,6 +478,7 @@ class Admin extends CI_Controller {
                 }
             }
         } else {
+            $image_changed = false;
             foreach(json_decode($product->image) as $image){
                 $image_names[] = $image;
             }
@@ -467,7 +487,7 @@ class Admin extends CI_Controller {
         // echo json_encode($image_names);
         // exit;
 
-        if ($name == $product->name && $category == $product->category && $description == $product->description && $amount == $product->amount && $stock == $product->stock && empty($_FILES['image']['name'][0])) {
+        if (($name == $product->name && $category == $product->category && $description == $product->description && $amount == $product->amount && $stock == $product->stock) && !$image_changed) {
             echo json_encode(['status' => 0, 'message' => 'Data is not Changed!']); //Not Works for Images
             return;
         }
@@ -513,6 +533,37 @@ class Admin extends CI_Controller {
             return;
         }
         echo json_encode(['status' => 1, "product_name"=>$result->name, "product_stock"=>$result->stock]);
+        return;
+    }
+
+    //Get Product By Name
+    public function get_product_by_name($name = null) {
+        if ($this->input->method() !== 'get') {
+            echo json_encode(['status' => 0, 'message' => 'Invalid HTTP method. Use GET method.']);
+            return;
+        }
+        if ($name == null) {
+            echo json_encode(['status' => 0, 'message' => 'Required Name as Params.']);
+            return;
+        }
+        $this->load->helper('url');
+        $base_url = base_url();
+        $name = urldecode($name);
+
+        // echo json_encode([$name]);
+        // exit;
+        $result =  $this->db->get_where('products', ['name' => $name])->row();
+        if(empty($result)){
+            echo json_encode(['status' => 0, "message"=> "Product Not Found!"]);
+            return;
+        }
+        $updated_images=[];
+        $decoded_images = json_decode($result->image);
+        foreach($decoded_images as $image){
+            $updated_images[] = $base_url . 'uploads/' . $image;
+        }
+        $result->image = $updated_images;
+        echo json_encode(['status' => 1, "product"=>$result]);
         return;
     }
 
