@@ -97,7 +97,7 @@ class Admin extends CI_Controller {
         if(!empty($result)){
             echo json_encode(["status"=>1,"admins"=>$result]);
         }else {
-            echo json_encode(["status"=> 0, "messgae"=> "No Admin Found!"]);
+            echo json_encode(["status"=> 0, "message"=> "No Admin Found!"]);
         }
         return;
     }
@@ -323,7 +323,7 @@ class Admin extends CI_Controller {
             }
             echo json_encode(["status"=>1,"products"=>$result]);
         }else {
-            echo json_encode(["status"=> 0, "messgae"=> "No Product Found!"]);
+            echo json_encode(["status"=> 0, "message"=> "No Product Found!"]);
         }
         return;
     }
